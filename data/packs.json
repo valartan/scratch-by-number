@@ -1,0 +1,19 @@
+{
+  "packs": [
+    {
+      "id": "test_pack",
+      "name": "Pack de test",
+      "levels": [
+        {
+          "id": "test_level_01",
+          "name": "Niveau test",
+          "indexMap": "data/test_level_01/indexMap.png",
+          "hiddenImage": "data/test_level_01/hidden.png",
+          "mask": "data/test_level_01/mask.png",
+          "palette": "data/test_level_01/palette.json",
+          "gridSize": 100
+        }
+      ]
+    }
+  ]
+}
