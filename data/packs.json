@@ -1,0 +1,13 @@
+[
+  {
+    "id": "test",
+    "name": "Pack Test",
+    "icon": "assets/icons/test.png",
+    "levels": [
+      {
+        "id": "01",
+        "preview": "assets/levels/test/01/hidden.png"
+      }
+    ]
+  }
+]
