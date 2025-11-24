@@ -1,0 +1,990 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Scratch by Number – Builder PRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(135deg,#fbe9f0,#e5f0ff);
+  min-height: 100vh;
+}
+body {
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:16px;
+}
+#app {
+  width:100%;
+  max-width:1100px;
+  background:rgba(255,255,255,0.96);
+  border-radius:24px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.18);
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.logoTitle {
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:.04em;
+  color:#ff6fb5;
+  text-shadow:0 1px 3px rgba(0,0,0,0.2);
+}
+.subtitle {
+  font-size:13px;
+  color:#666;
+}
+main {
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+}
+.panel {
+  background:#f9f7ff;
+  border-radius:18px;
+  padding:12px 14px;
+  box-shadow:0 6px 16px rgba(0,0,0,0.10);
+}
+#leftPanel {
+  flex:0 0 320px;
+  max-width:100%;
+}
+#rightPanel {
+  flex:1;
+  min-width:320px;
+}
+.sectionTitle {
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:6px;
+  color:#333;
+}
+label {
+  font-size:12px;
+  font-weight:500;
+  display:block;
+  margin-bottom:4px;
+  color:#555;
+}
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width:100%;
+  padding:7px 9px;
+  border-radius:999px;
+  border:1px solid #d4d8ff;
+  font-size:13px;
+  outline:none;
+}
+textarea {
+  border-radius:12px;
+  resize:vertical;
+  min-height:80px;
+  font-family:monospace;
+}
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  border-color:#ff7ac4;
+  box-shadow:0 0 0 2px rgba(255,122,196,0.2);
+}
+.btn {
+  border:none;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  transition:transform .08s ease, box-shadow .08s ease, background .15s ease;
+}
+.btnPrimary {
+  background:linear-gradient(135deg,#ff7ac4,#ff9c9c);
+  color:#fff;
+  box-shadow:0 6px 16px rgba(255,122,196,0.45);
+}
+.btnPrimary:active {
+  transform:translateY(1px) scale(0.99);
+  box-shadow:0 3px 10px rgba(255,122,196,0.4);
+}
+.btnSecondary {
+  background:#f3f5ff;
+  color:#4353a5;
+  box-shadow:0 4px 10px rgba(40,40,90,0.12);
+}
+.btnSecondary:active {
+  transform:translateY(1px) scale(0.99);
+  box-shadow:0 2px 7px rgba(40,40,90,0.18);
+}
+.btnTiny {
+  padding:5px 8px;
+  font-size:11px;
+}
+.row {
+  display:flex;
+  gap:8px;
+  margin-bottom:8px;
+}
+.row > div {
+  flex:1;
+}
+.previewBox {
+  width:100%;
+  max-width:260px;
+  height:180px;
+  border-radius:16px;
+  border:2px solid #d4d8ff;
+  background:#e2e4ff;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.previewBox img {
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+}
+.palettePreview {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:6px;
+}
+.paletteSwatch {
+  width:22px;
+  height:22px;
+  border-radius:6px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+  border:1px solid rgba(255,255,255,0.6);
+}
+.infoText {
+  font-size:12px;
+  color:#666;
+}
+.smallTag {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  border-radius:999px;
+  padding:3px 8px;
+  background:rgba(255,255,255,0.9);
+  border:1px solid rgba(0,0,0,0.04);
+  margin-top:4px;
+}
+.scratchHeader {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:12px;
+  color:#555;
+}
+.progressBar {
+  width:100%;
+  height:8px;
+  background:#dde2ff;
+  border-radius:999px;
+  overflow:hidden;
+}
+.progressInner {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#6cc6ff,#a971ff);
+}
+#scratchCanvasWrap {
+  border-radius:20px;
+  background:#111;
+  padding:8px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.18);
+  margin-top:8px;
+}
+#scratchCanvas {
+  width:100%;
+  max-width:360px;
+  height:auto;
+  aspect-ratio:1/1;
+  background:#000;
+  border-radius:16px;
+  touch-action:none;
+  display:block;
+  margin:0 auto;
+}
+.scratchBottom {
+  margin-top:8px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:12px;
+}
+.paletteRow {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  justify-content:center;
+}
+.dot {
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  border:2px solid #fff;
+  box-shadow:0 2px 5px rgba(0,0,0,0.35);
+  cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease, border .12s ease;
+}
+.dot.active {
+  transform:scale(1.12);
+  border-color:#ff7ac4;
+  box-shadow:0 0 8px rgba(255,122,196,0.9);
+}
+.brushSliderRow {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+}
+.brushSliderRow span {
+  font-size:12px;
+  color:#555;
+}
+input[type="range"] {
+  flex:1;
+}
+@media (max-width:900px){
+  main {
+    flex-direction:column;
+  }
+  #leftPanel {
+    flex:auto;
+  }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div>
+      <div class="logoTitle">Scratch by Number – Builder PRO</div>
+      <div class="subtitle">Transforme une image en niveau jouable, avec catégories 💾</div>
+    </div>
+    <div class="infoText">
+      ⚠ Pour tester les imports, ouvre ce fichier avec un petit serveur local<br>
+      (ex: <code>python -m http.server</code>) ou utilise Firefox.
+    </div>
+  </header>
+
+  <main>
+    <!-- PANEL GAUCHE : PARAMS, IMPORT, CATÉGORIE, EXPORT -->
+    <div id="leftPanel" class="panel">
+      <div class="sectionTitle">1. Image & paramètres</div>
+
+      <label for="imgInput">Image source</label>
+      <input id="imgInput" type="file" accept="image/png,image/jpeg">
+
+      <div class="row">
+        <div>
+          <label for="gridSize">Taille de la grille</label>
+          <select id="gridSize">
+  <option value="50">50 × 50</option>
+  <option value="100">100 × 100</option>
+  <option value="200" selected>200 × 200</option>
+  <option value="300">300 × 300</option>
+  <option value="500">500 × 500</option>
+  <option value="800">800 × 800</option>
+  <option value="1000">1000 × 1000</option>
+</select>
+        </div>
+        <div>
+          <label for="maxColors">Couleurs max</label>
+          <input id="maxColors" type="number" min="5" max="32" value="20">
+        </div>
+      </div>
+
+      <button class="btn btnPrimary" id="btnGenerate">Générer la grille</button>
+
+      <div style="margin-top:8px;" class="infoText">
+        Grille : <span id="gridInfo">-</span>
+      </div>
+
+      <hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">
+
+      <div class="sectionTitle">2. Métadonnées niveau</div>
+
+      <label for="levelTitle">Titre du niveau</label>
+      <input id="levelTitle" type="text" placeholder="ex : Chat mignon">
+
+      <div class="row">
+        <div>
+          <label for="categorySelect">Catégorie</label>
+          <select id="categorySelect">  <option value="1000">1000 × 1000</option>
+</select>
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+          <button class="btn btnSecondary btnTiny" id="btnNewCategory">+ Catégorie</button>
+        </div>
+      </div>
+
+      <label for="levelId">ID du niveau</label>
+      <input id="levelId" type="text" placeholder="ex : kawaii_chat_01">
+
+      <div class="infoText">
+        L’ID servira pour ton jeu (levels.json). Tu peux le laisser auto, ou le changer.
+      </div>
+
+      <hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">
+
+      <div class="sectionTitle">3. Export</div>
+      <div class="infoText">Après génération, tu peux exporter les fichiers :</div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
+        <button class="btn btnSecondary btnTiny" id="btnExportHidden">hidden.png</button>
+        <button class="btn btnSecondary btnTiny" id="btnExportMask">mask.png</button>
+        <button class="btn btnSecondary btnTiny" id="btnExportIndex">indexMap.png</button>
+        <button class="btn btnSecondary btnTiny" id="btnExportPalette">palette.json</button>
+        <button class="btn btnSecondary btnTiny" id="btnExportMeta">meta.json</button>
+      </div>
+
+      <!-- 🔥 NOUVEAU : bouton Publier dans le jeu -->
+      <div style="margin-top:10px;">
+        <button class="btn btnPrimary" id="btnPublishGame">
+          🚀 Publier dans le jeu
+        </button>
+      </div>
+
+      <div class="smallTag">Tu pourras ensuite déposer ces fichiers dans /levels/<em>catégorie</em>/ de ton jeu.</div>
+
+      <label style="margin-top:10px;">Entrée à coller dans levels.json</label>
+      <textarea id="levelsSnippet" readonly></textarea>
+      <button class="btn btnSecondary btnTiny" id="btnCopySnippet">Copier le snippet</button>
+    </div>
+
+    <!-- PANEL DROIT : APERÇUS + TEST SCRATCH -->
+    <div id="rightPanel" class="panel">
+      <div class="sectionTitle">4. Aperçus image & palette</div>
+
+      <div class="row">
+        <div>
+          <label>Original</label>
+          <div class="previewBox">
+            <img id="previewOriginal" alt="">
+          </div>
+        </div>
+        <div>
+          <label>Pixelisé</label>
+          <div class="previewBox">
+            <img id="previewPixel" alt="">
+          </div>
+        </div>
+      </div>
+
+      <label>Palette de couleurs</label>
+      <div id="palettePreview" class="palettePreview"></div>
+
+      <div class="smallTag">Les couleurs sont réduites automatiquement (5–32).</div>
+
+      <hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">
+
+      <div class="sectionTitle">5. Test de grattage (prévisualisation)</div>
+      <div class="scratchHeader">
+        <div>
+          Couleur active : <span id="scratchActiveColor">aucune</span><br>
+          Restants pour cette couleur : <span id="scratchRemaining">0</span>
+        </div>
+        <div>
+          Progression : <span id="scratchProgressLabel">0%</span>
+          <div class="progressBar"><div id="scratchProgressInner" class="progressInner"></div></div>
+        </div>
+      </div>
+
+      <div id="scratchCanvasWrap">
+        <canvas id="scratchCanvas" width="360" height="360"></canvas>
+      </div>
+
+      <div class="scratchBottom">
+        <div class="brushSliderRow">
+          <span>Taille du pinceau</span>
+          <span><span id="brushValue">3</span> px</span>
+        </div>
+        <input id="brushSlider" type="range" min="1" max="50" value="3">
+
+        <div class="paletteRow" id="scratchPaletteRow"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ========= ÉTAT GLOBAL =========
+let originalImg = null;
+let resizedCanvas = document.createElement("canvas");
+let resizedCtx = resizedCanvas.getContext("2d");
+
+let LEVEL = [];           // [y][x] -> index couleur
+let COLOR_PALETTE = [];   // [{r,g,b}]
+let colorRemaining = [];  // par couleur
+let revealed = 0;
+let totalCells = 0;
+
+let activeColorIndex = null;
+let brushSize = 3;
+
+const scratchCanvas = document.getElementById("scratchCanvas");
+const sctx = scratchCanvas.getContext("2d");
+
+let scratchingTouch = false;
+
+// ========= INIT CATÉGORIES =========
+const DEFAULT_CATEGORIES = [
+  { id: "kawaii", name: "Kawaii", emoji: "🌸" },
+  { id: "animaux", name: "Animaux", emoji: "🐾" },
+  { id: "nature",  name: "Nature",  emoji: "🌿" },
+  { id: "monuments", name: "Monuments", emoji: "🏙" }
+];
+
+function loadCategories() {
+  try {
+    const raw = localStorage.getItem("sbn_categories");
+    if (!raw) return DEFAULT_CATEGORIES;
+    const data = JSON.parse(raw);
+    if (!Array.isArray(data)) return DEFAULT_CATEGORIES;
+    return data;
+  } catch {
+    return DEFAULT_CATEGORIES;
+  }
+}
+
+function saveCategories(cats) {
+  localStorage.setItem("sbn_categories", JSON.stringify(cats));
+}
+
+let CATEGORIES = loadCategories();
+
+const categorySelect = document.getElementById("categorySelect");
+const btnNewCategory = document.getElementById("btnNewCategory");
+
+function refreshCategorySelect() {
+  categorySelect.innerHTML = "";
+  CATEGORIES.forEach(cat => {
+    const opt = document.createElement("option");
+    opt.value = cat.id;
+    opt.textContent = `${cat.emoji || "🎨"} ${cat.name}`;
+    categorySelect.appendChild(opt);
+  });
+}
+refreshCategorySelect();
+
+btnNewCategory.addEventListener("click", () => {
+  const name = prompt("Nom de la nouvelle catégorie (ex : Halloween) :");
+  if (!name) return;
+  let id = prompt("ID de la catégorie (sans espaces, ex : halloween) :");
+  if (!id) return;
+  id = id.trim().toLowerCase();
+  const emoji = prompt("Emoji (optionnel, ex : 🎃) :") || "🎨";
+  if (CATEGORIES.some(c => c.id === id)) {
+    alert("Cette ID de catégorie existe déjà.");
+    return;
+  }
+  CATEGORIES.push({ id, name, emoji });
+  saveCategories(CATEGORIES);
+  refreshCategorySelect();
+  categorySelect.value = id;
+});
+
+// ========= IMPORT IMAGE =========
+const imgInput = document.getElementById("imgInput");
+const previewOriginal = document.getElementById("previewOriginal");
+const previewPixel = document.getElementById("previewPixel");
+
+imgInput.addEventListener("change", e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const img = new Image();
+  img.onload = () => {
+    originalImg = img;
+    previewOriginal.src = img.src;
+  };
+  img.src = URL.createObjectURL(file);
+});
+
+// ========= GÉNÉRATION GRILLE =========
+const btnGenerate = document.getElementById("btnGenerate");
+const gridInfo = document.getElementById("gridInfo");
+const palettePreview = document.getElementById("palettePreview");
+const scratchPaletteRow = document.getElementById("scratchPaletteRow");
+
+btnGenerate.addEventListener("click", () => {
+  if (!originalImg) {
+    alert("Choisis d’abord une image.");
+    return;
+  }
+  const size = parseInt(document.getElementById("gridSize").value,10);
+  let maxC = parseInt(document.getElementById("maxColors").value,10);
+  if (isNaN(maxC) || maxC < 5) maxC = 5;
+  if (maxC > 32) maxC = 32;
+  generateGrid(size, maxC);
+  autoFillLevelId();
+  buildLevelsSnippet();
+});
+
+function generateGrid(size, maxColors) {
+  resizedCanvas.width = size;
+  resizedCanvas.height = size;
+
+  const ratio = Math.min(size / originalImg.width, size / originalImg.height);
+  const w = originalImg.width * ratio;
+  const h = originalImg.height * ratio;
+  const x = (size - w) / 2;
+  const y = (size - h) / 2;
+
+  resizedCtx.clearRect(0,0,size,size);
+  resizedCtx.imageSmoothingEnabled = false;
+  resizedCtx.drawImage(originalImg, x, y, w, h);
+
+  previewPixel.src = resizedCanvas.toDataURL("image/png");
+
+  const imgData = resizedCtx.getImageData(0,0,size,size);
+  const data = imgData.data;
+
+  COLOR_PALETTE = quantize(data, maxColors);
+
+  LEVEL = [];
+  colorRemaining = new Array(COLOR_PALETTE.length).fill(0);
+  revealed = 0;
+  totalCells = size * size;
+
+  for (let yy=0; yy<size; yy++) {
+    const row = [];
+    for (let xx=0; xx<size; xx++) {
+      const i = (yy*size+xx)*4;
+      const r = data[i];
+      const g = data[i+1];
+      const b = data[i+2];
+      const idx = nearest(r,g,b);
+      row.push(idx);
+      colorRemaining[idx]++;
+    }
+    LEVEL.push(row);
+  }
+
+  compressAndSortColors();
+  gridInfo.textContent = `${size}×${size}, ${COLOR_PALETTE.length} couleurs.`;
+
+  buildPalettePreview();
+  initScratchCanvas();
+}
+
+// ========= QUANTIZATION =========
+function dist2(a,b) {
+  return (a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2;
+}
+function quantize(data, count) {
+  const colors = [];
+  for (let i=0;i<data.length;i+=4) {
+    colors.push([data[i],data[i+1],data[i+2]]);
+  }
+  const centroids = [];
+  for (let i=0;i<count;i++) {
+    const p = colors[Math.floor(Math.random()*colors.length)];
+    centroids.push([p[0],p[1],p[2]]);
+  }
+  for (let it=0;it<3;it++) {
+    const groups = Array.from({length:count},()=>[]);
+    for (let c of colors) {
+      let best=0, bestD=Infinity;
+      for (let i=0;i<count;i++) {
+        const d = dist2(c,centroids[i]);
+        if (d<bestD) {bestD=d;best=i;}
+      }
+      groups[best].push(c);
+    }
+    for (let i=0;i<count;i++) {
+      if (!groups[i].length) continue;
+      let r=0,g=0,b=0;
+      for (let c of groups[i]) {r+=c[0];g+=c[1];b+=c[2];}
+      r/=groups[i].length;g/=groups[i].length;b/=groups[i].length;
+      centroids[i]=[r,g,b];
+    }
+  }
+  return centroids.map(c=>({r:Math.round(c[0]),g:Math.round(c[1]),b:Math.round(c[2])}));
+}
+function nearest(r,g,b) {
+  let best=0,bestD=Infinity;
+  for (let i=0;i<COLOR_PALETTE.length;i++) {
+    const c = COLOR_PALETTE[i];
+    const d = dist2([r,g,b],[c.r,c.g,c.b]);
+    if (d<bestD) {bestD=d;best=i;}
+  }
+  return best;
+}
+
+
+// ========= COMPRESSION + TRI DES COULEURS =========
+function compressAndSortColors() {
+  const used = [];
+  for (let i=0;i<COLOR_PALETTE.length;i++) {
+    if (colorRemaining[i] > 0) {
+      used.push({ old:i, count:colorRemaining[i] });
+    }
+  }
+  used.sort((a,b)=>b.count - a.count);
+  const newPalette = [];
+  const mapOldToNew = {};
+  used.forEach((u,idx)=>{
+    newPalette[idx] = COLOR_PALETTE[u.old];
+    mapOldToNew[u.old] = idx;
+  });
+  for (let y=0;y<LEVEL.length;y++) {
+    for (let x=0;x<LEVEL[y].length;x++) {
+      const v = LEVEL[y][x];
+      if (v>=0) LEVEL[y][x] = mapOldToNew[v];
+    }
+  }
+  const newRemaining = new Array(used.length).fill(0);
+  used.forEach((u,idx)=>{ newRemaining[idx] = u.count; });
+  COLOR_PALETTE = newPalette;
+  colorRemaining = newRemaining;
+}
+
+// ========= PREVIEW PALETTE =========
+function buildPalettePreview() {
+  palettePreview.innerHTML = "";
+  COLOR_PALETTE.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "paletteSwatch";
+    div.style.background = `rgb(${c.r},${c.g},${c.b})`;
+    palettePreview.appendChild(div);
+  });
+}
+
+// ========= AUTO FILL LEVEL ID =========
+const levelTitleInput = document.getElementById("levelTitle");
+const levelIdInput = document.getElementById("levelId");
+
+function slugify(str) {
+  return str.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"_")
+    .replace(/^_+|_+$/g,"");
+}
+
+function autoFillLevelId() {
+  const catId = categorySelect.value || "misc";
+  const baseTitle = levelTitleInput.value || "image";
+  const slug = slugify(baseTitle);
+  levelIdInput.value = `${catId}_${slug || "image"}`;
+}
+
+// quand on modifie le titre ou la catégorie, regénérer un id si l’input est vide
+levelTitleInput.addEventListener("input", () => {
+  if (!levelIdInput.value.trim()) autoFillLevelId();
+});
+categorySelect.addEventListener("change", () => {
+  if (!levelIdInput.value.trim()) autoFillLevelId();
+});
+
+// ========= TEST SCRATCH =========
+const scratchActiveColor = document.getElementById("scratchActiveColor");
+const scratchRemaining = document.getElementById("scratchRemaining");
+const scratchProgressLabel = document.getElementById("scratchProgressLabel");
+const scratchProgressInner = document.getElementById("scratchProgressInner");
+const brushSlider = document.getElementById("brushSlider");
+const brushValue = document.getElementById("brushValue");
+
+brushSlider.addEventListener("input", () => {
+  brushSize = parseInt(brushSlider.value,10);
+  brushValue.textContent = brushSize;
+});
+
+function initScratchCanvas() {
+  const ctx = sctx;
+  ctx.save();
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,scratchCanvas.width,scratchCanvas.height);
+  ctx.restore();
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(0,0,scratchCanvas.width,scratchCanvas.height);
+
+  buildScratchPalette();
+  revealed = 0;
+  totalCells = LEVEL.length * LEVEL.length;
+  updateScratchProgress();
+}
+
+function buildScratchPalette() {
+  scratchPaletteRow.innerHTML = "";
+  COLOR_PALETTE.forEach((c,i) => {
+    if (colorRemaining[i] > 0) {
+      const dot = document.createElement("div");
+      dot.className = "dot";
+      dot.style.background = `rgb(${c.r},${c.g},${c.b})`;
+      dot.addEventListener("click", () => {
+        document.querySelectorAll("#scratchPaletteRow .dot").forEach(d => d.classList.remove("active"));
+        dot.classList.add("active");
+        activeColorIndex = i;
+        scratchActiveColor.textContent = `Couleur ${i+1}`;
+        refreshRemainingForActive();
+      });
+      scratchPaletteRow.appendChild(dot);
+    }
+  });
+  const first = scratchPaletteRow.querySelector(".dot");
+  if (first) {
+    first.classList.add("active");
+    activeColorIndex = COLOR_PALETTE.findIndex((_,i)=>colorRemaining[i] > 0);
+    scratchActiveColor.textContent = `Couleur ${activeColorIndex+1}`;
+    refreshRemainingForActive();
+  } else {
+    activeColorIndex = null;
+    scratchActiveColor.textContent = "aucune";
+  }
+}
+
+function refreshRemainingForActive() {
+  if (activeColorIndex === null) {
+    scratchRemaining.textContent = "0";
+    return;
+  }
+  scratchRemaining.textContent = colorRemaining[activeColorIndex];
+}
+
+function updateScratchProgress() {
+  const p = totalCells > 0 ? Math.floor((revealed/totalCells)*100) : 0;
+  scratchProgressLabel.textContent = p + "%";
+  scratchProgressInner.style.width = p + "%";
+}
+
+// mapping coord -> cellule
+function scratchAtCanvas(x,y) {
+  if (activeColorIndex === null) return;
+  const size = LEVEL.length;
+  if (!size) return;
+
+  const rect = scratchCanvas.getBoundingClientRect();
+  const px = x - rect.left;
+  const py = y - rect.top;
+
+  const cellSize = scratchCanvas.width / size;
+  const gx = Math.floor(px / cellSize);
+  const gy = Math.floor(py / cellSize);
+
+  for (let dy=-brushSize; dy<=brushSize; dy++) {
+    for (let dx=-brushSize; dx<=brushSize; dx++) {
+      const X = gx+dx, Y = gy+dy;
+      if (X<0 || Y<0 || X>=size || Y>=size) continue;
+      if (LEVEL[Y][X] !== activeColorIndex) continue;
+      LEVEL[Y][X] = -1;
+      revealed++;
+      colorRemaining[activeColorIndex]--;
+
+      const col = COLOR_PALETTE[activeColorIndex];
+      sctx.fillStyle = `rgb(${col.r},${col.g},${col.b})`;
+      sctx.fillRect(
+  X * cellSize,
+  Y * cellSize,
+  Math.ceil(cellSize),
+  Math.ceil(cellSize)
+);
+
+    }
+  }
+  refreshRemainingForActive();
+  updateScratchProgress();
+}
+
+// souris
+scratchCanvas.addEventListener("mousemove", e => {
+  if (e.buttons !== 1) return; // pas de drag -> pas de scratch
+  scratchAtCanvas(e.clientX,e.clientY);
+});
+// tactile
+scratchCanvas.addEventListener("touchstart", e => {
+  scratchingTouch = true;
+  e.preventDefault();
+  const t = e.touches[0];
+  scratchAtCanvas(t.clientX,t.clientY);
+},{passive:false});
+scratchCanvas.addEventListener("touchmove", e => {
+  if (!scratchingTouch) return;
+  e.preventDefault();
+  const t = e.touches[0];
+  scratchAtCanvas(t.clientX,t.clientY);
+},{passive:false});
+scratchCanvas.addEventListener("touchend", ()=>{scratchingTouch=false;});
+scratchCanvas.addEventListener("touchcancel", ()=>{scratchingTouch=false;});
+document.addEventListener("touchmove", e => {
+  if (scratchingTouch) e.preventDefault();
+},{passive:false});
+
+// ========= EXPORT =========
+const btnExportHidden = document.getElementById("btnExportHidden");
+const btnExportMask = document.getElementById("btnExportMask");
+const btnExportIndex = document.getElementById("btnExportIndex");
+const btnExportPalette = document.getElementById("btnExportPalette");
+const btnExportMeta = document.getElementById("btnExportMeta");
+
+btnExportHidden.addEventListener("click", () => {
+  if (!LEVEL.length) {alert("Génère d’abord une grille.");return;}
+  downloadDataURL(resizedCanvas.toDataURL("image/png"), getLevelIdOrDefault()+"_hidden.png");
+});
+
+btnExportMask.addEventListener("click", () => {
+  if (!LEVEL.length) {alert("Génère d’abord une grille.");return;}
+  const size = LEVEL.length;
+  const c = document.createElement("canvas");
+  c.width = size; c.height = size;
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "black";
+  ctx.fillRect(0,0,size,size);
+  downloadDataURL(c.toDataURL("image/png"), getLevelIdOrDefault()+"_mask.png");
+});
+
+btnExportIndex.addEventListener("click", () => {
+  if (!LEVEL.length) {alert("Génère d’abord une grille.");return;}
+  const size = LEVEL.length;
+  const c = document.createElement("canvas");
+  c.width = size; c.height = size;
+  const ctx = c.getContext("2d");
+  const img = ctx.getImageData(0,0,size,size);
+  for (let y=0;y<size;y++) {
+    for (let x=0;x<size;x++) {
+      const id = (y*size+x)*4;
+      let col = LEVEL[y][x];
+      if (col<0) col=0;
+      img.data[id] = col;
+      img.data[id+1] = col;
+      img.data[id+2] = col;
+      img.data[id+3] = 255;
+    }
+  }
+  ctx.putImageData(img,0,0);
+  downloadDataURL(c.toDataURL("image/png"), getLevelIdOrDefault()+"_indexMap.png");
+});
+
+btnExportPalette.addEventListener("click", () => {
+  if (!COLOR_PALETTE.length) {alert("Génère d’abord une grille.");return;}
+  downloadJSON(COLOR_PALETTE, getLevelIdOrDefault()+"_palette.json");
+});
+
+btnExportMeta.addEventListener("click", () => {
+  if (!LEVEL.length) {alert("Génère d’abord une grille.");return;}
+  const meta = buildMeta();
+  downloadJSON(meta, getLevelIdOrDefault()+"_meta.json");
+});
+
+function getLevelIdOrDefault() {
+  return (levelIdInput.value || "level").trim();
+}
+
+function buildMeta() {
+  const catId = categorySelect.value || "misc";
+  const cat = CATEGORIES.find(c => c.id===catId);
+  const title = levelTitleInput.value || "Image sans titre";
+  return {
+    id: getLevelIdOrDefault(),
+    title,
+    categoryId: catId,
+    categoryName: cat ? cat.name : catId,
+    size: LEVEL.length,
+    colors: COLOR_PALETTE.length,
+    created: new Date().toISOString()
+  };
+}
+
+function downloadDataURL(dataURL, filename) {
+  const a = document.createElement("a");
+  a.href = dataURL;
+  a.download = filename;
+  a.click();
+}
+
+function downloadJSON(obj, filename) {
+  const blob = new Blob([JSON.stringify(obj,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ========= SNIPPET LEVELS.JSON =========
+const levelsSnippet = document.getElementById("levelsSnippet");
+const btnCopySnippet = document.getElementById("btnCopySnippet");
+
+function buildLevelsSnippet() {
+  if (!LEVEL.length) {levelsSnippet.value="";return;}
+  const meta = buildMeta();
+  const snippet = JSON.stringify({
+    id: meta.id,
+    title: meta.title
+  }, null, 2);
+  levelsSnippet.value = snippet;
+}
+
+btnCopySnippet.addEventListener("click", () => {
+  levelsSnippet.select();
+  document.execCommand("copy");
+});
+
+// ========= PUBLICATION DANS LE JEU (via serveur Node) =========
+const btnPublishGame = document.getElementById("btnPublishGame");
+
+btnPublishGame.addEventListener("click", async () => {
+  if (!LEVEL.length || !COLOR_PALETTE.length) {
+    alert("Génère d'abord une grille (image + couleurs).");
+    return;
+  }
+
+  const meta = buildMeta();       // infos niveau
+  const grid = LEVEL;             // grille [y][x]
+  const palette = COLOR_PALETTE;  // tableau {r,g,b}
+
+  const payload = { meta, grid, palette };
+
+  try {
+    const resp = await fetch("/api/publish-level", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    const data = await resp.json();
+    if (!data.ok) {
+      console.error(data);
+      alert("Erreur lors de la publication : " + (data.error || "inconnue"));
+      return;
+    }
+    alert("Niveau publié dans le jeu ! 🎉\n\nTu peux l'ouvrir dans game.html.");
+  } catch (e) {
+    console.error(e);
+    alert("Impossible de contacter le serveur.\nVérifie que node server.js tourne bien.");
+  }
+});
+
+// init de l’ID si titre vide
+autoFillLevelId();
+</script>
+</body>
+</html>
