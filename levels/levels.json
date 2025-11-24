@@ -1,0 +1,41 @@
+{
+  "collections": [
+    {
+      "id": "kawaii",
+      "name": "Kawaii",
+      "emoji": "🎨",
+      "levels": [
+        {
+          "id": "kawaii_blue",
+          "title": "blueball"
+        },
+        {
+          "id": "kawaii_superh",
+          "title": "superh"
+        },
+        {
+          "id": "kawaii_re",
+          "title": "re"
+        }
+      ]
+    },
+    {
+      "id": "monuments",
+      "name": "Monuments",
+      "emoji": "🎨",
+      "levels": []
+    },
+    {
+      "id": "nature",
+      "name": "Nature",
+      "emoji": "🎨",
+      "levels": []
+    },
+    {
+      "id": "perso",
+      "name": "Perso",
+      "emoji": "🎨",
+      "levels": []
+    }
+  ]
+}
